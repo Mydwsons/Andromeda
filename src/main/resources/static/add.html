@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
+        crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="/" style="padding:0"><img src="img/icon.png" class="img-fluid |rounded-circle"
+                    alt="">Andromeda</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/">首页
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="rating">排行榜</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            App
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <img src="img/zfb.jpg" width="170px">
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3">
+                    <div class="card" style="background-color: rgba(255,255,255,0.5)">
+                        <div class="card-body">
+                            <h4 class="card-title text-center">添加题目</h4>
+                            <hr>
+                            <div class="form-group">
+                                <label for="">题干</label>
+                                <input v-model="subject" class="form-control" placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="">选项 1</label>
+                                <input v-model="item1" class="form-control" placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="">选项 2</label>
+                                <input v-model="item2" class="form-control" placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="">选项 3</label>
+                                <input v-model="item3" class="form-control" placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="">选项 4</label>
+                                <input v-model="item4" class="form-control" placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="">正确答案</label>
+                                <select class="form-control" v-model="answer">
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                </select>
+                            </div>
+                            <button v-if="subject===''||item1===''||item2===''||item3===''||item4===''||answer===''"
+                                class="btn btn-primary mt-5 btn-block" disabled>填写信息不能有空</button>
+                            <button v-else @click="submit" class="btn btn-primary mt-5 btn-block" data-toggle="modal"
+                                data-target="#modelId">提交</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modelTitleId">提示</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {{ msg }}
+                    </div>
+                    <div v-if="msg==='添加成功！'" class="modal-footer">
+                        <a href="/">
+                            <button type="button" class="btn btn-success">跳转主页</button>
+                        </a>
+                        <a href="add">
+                            <button type="button" class="btn btn-primary">继续添加</button>
+                        </a>
+                    </div>
+                    <div v-else class="modal-footer">
+                        <a href="add">
+                            <button type="button" class="btn btn-primary">确定</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="jumbotron jumbotron-fluid bg-dark float-bottom" style="margin:0;padding-bottom: 10px">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-5 offset-md-1 pr-5" style="border-right: 1px solid gray">
+                        <table class="table table-borderless table-sm">
+                            <thead style="color: gray">
+                                <tr>
+                                    <th>Andromeda</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody style="color: white">
+                                <tr>
+                                    <td>关于我们</td>
+                                    <td>联系我们</td>
+                                    <td>加入我们</td>
+                                </tr>
+                                <tr>
+                                    <td>友情链接</td>
+                                    <td>Anromeda认证</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-4 offset-md-1">
+                        <table class="table table-borderless table-sm">
+                            <thead style="color: gray">
+                                <tr>
+                                    <th>传送门</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody style="color: white">
+                                <tr>
+                                    <td>帮助中心</td>
+                                    <td>高级弹幕</td>
+                                    <td>活动专题页</td>
+                                </tr>
+                                <tr>
+                                    <td>侵权申诉</td>
+                                    <td>活动中心</td>
+                                    <td>用户反馈论坛</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row mt-3" style="color:gray;font-weight:100;">
+                    <div class="col-md-10 offset-md-1">
+                        <b style="border-right: 1px solid gray">考试测试经营许可证：（湘）字第1248&nbsp </b><b style="border-right: 1px solid gray">&nbsp
+                            网络文化经营许可证：沪网文[2016]2296-134号&nbsp </b>
+                        <b style="border-right: 1px solid gray">&nbsp 信息网络传播考试许可证：0910417&nbsp </b><b style="border-right: 1px solid gray">&nbsp
+                            互联网ICP备案：沪ICP备13002172号-3 沪ICP证：沪B2-20100043 &nbsp </b>
+                        <b style="border-right: 1px solid gray">&nbsp 违法不良信息举报邮箱：help@andromeda.com&nbsp </b><b style="border-right: 1px solid gray">&nbsp
+                            违法不良信息举报电话：4000233233转3 &nbsp </b>
+                        <b style="border-right: 1px solid gray">&nbsp 营业执照&nbsp </b>
+                        <hr>
+                    </div>
+                </div>
+                <div class="row mt-3" style="color:gray;font-weight:100;">
+                    <b class="mx-auto">Copyright © 2018 Andromeda信息科技 版权所有</b>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                subject: '',
+                item1: '',
+                item2: '',
+                item3: '',
+                item4: '',
+                answer: '',
+                msg: ''
+            },
+            methods: {
+                submit: function () {
+                    axios.post('/api/v1/add', {
+                            subject: this.subject,
+                            item1: this.item1,
+                            item2: this.item2,
+                            item3: this.item3,
+                            item4: this.item4,
+                            answer: this.answer,
+                        })
+                        .then((response) => {
+                            this.msg = response.data;
+                        })
+                        .catch(function (error) {})
+                }
+            }
+        })
+    </script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

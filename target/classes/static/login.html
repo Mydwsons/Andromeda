@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="zh">
+
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="style/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body background="img/bg.jpg" style="background-size:100%">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgba(85, 85, 85, 0.8)">
+        <a class="navbar-brand" href="/" style="padding:0"><img src="img/icon.png" class="img-fluid |rounded-circle" alt="">Andromeda</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" >
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">首页
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="rating">排行榜</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        App
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <img src="img/zfb.jpg" width="170px">
+                    </div>
+                </li>
+            </ul>
+            <!-- <form class="form-inline my-2 my-lg-0">
+                <button class="btn btn-success my-2 my-sm-0" type="submit">注册 / 登录</button>
+            </form> -->
+        </div>
+    </nav>
+    <div id="app" class="mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3">
+                    <div class="card" style="background-color: rgba(255,255,255,0.5)">
+                        <div class="card-body">
+                            <h4 class="card-title text-center">登录</h4>
+                            <hr>
+                            <div>
+                                <form>
+                                    <input v-model="name" required='' type='text'>
+                                    <label v-model="pwd" alt='请输入用户名' placeholder='用户名'></label>
+                                </form>
+                            </div>
+                            <div>
+                                <form>
+                                    <input v-model="pwd" required='' type='password'>
+                                    <label alt='请输入密码' placeholder='密码'></label>
+                                </form>
+                            </div>
+                            <!-- Button trigger modal -->
+                            <button @click="submit" type="submit" class="btn btn-info btn-lg btn-block" data-toggle="modal"
+                                data-target="#modelId">提交</button>
+                            <a style="display:block;margin-top: 10px;margin-left: 5px" href="register">新用户.</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modelTitleId">提示</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {{ msg }}
+                    </div>
+                    <div class="modal-footer">
+                        <a v-if="msg=='登录成功！'" href="/">
+                            <button type="button" class="btn btn-primary">确定</button>
+                        </a>
+                        <a v-else href="login">
+                            <button type="button" class="btn btn-primary">确定</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="jumbotron jumbotron-fluid bg-dark float-bottom" style="margin:0;margin-top:200px;padding-bottom: 10px">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-5 offset-md-1 pr-5" style="border-right: 1px solid gray">
+                        <table class="table table-borderless table-sm">
+                            <thead style="color: gray">
+                                <tr>
+                                    <th>Andromeda</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody style="color: white">
+                                <tr>
+                                    <td>关于我们</td>
+                                    <td>联系我们</td>
+                                    <td>加入我们</td>
+                                </tr>
+                                <tr>
+                                    <td>友情链接</td>
+                                    <td>Anromeda认证</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-4 offset-md-1">
+                        <table class="table table-borderless table-sm">
+                            <thead style="color: gray">
+                                <tr>
+                                    <th>传送门</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody style="color: white">
+                                <tr>
+                                    <td>帮助中心</td>
+                                    <td>高级弹幕</td>
+                                    <td>活动专题页</td>
+                                </tr>
+                                <tr>
+                                    <td>侵权申诉</td>
+                                    <td>活动中心</td>
+                                    <td>用户反馈论坛</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row mt-3" style="color:gray;font-weight:100;">
+                    <div class="col-md-10 offset-md-1">
+                        <b style="border-right: 1px solid gray">考试测试经营许可证：（湘）字第1248&nbsp </b><b style="border-right: 1px solid gray">&nbsp
+                            网络文化经营许可证：沪网文[2016]2296-134号&nbsp </b>
+                        <b style="border-right: 1px solid gray">&nbsp 信息网络传播考试许可证：0910417&nbsp </b><b style="border-right: 1px solid gray">&nbsp
+                            互联网ICP备案：沪ICP备13002172号-3 沪ICP证：沪B2-20100043 &nbsp </b>
+                        <b style="border-right: 1px solid gray">&nbsp 违法不良信息举报邮箱：help@andromeda.com&nbsp </b><b style="border-right: 1px solid gray">&nbsp
+                            违法不良信息举报电话：4000233233转3 &nbsp </b>
+                        <b style="border-right: 1px solid gray">&nbsp 营业执照&nbsp </b>
+                        <hr>
+                    </div>
+                </div>
+                <div class="row mt-3" style="color:gray;font-weight:100;">
+                    <b class="mx-auto">Copyright © 2018 Andromeda信息科技 版权所有</b>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                name: '',
+                pwd: '',
+                msg: '',
+            },
+            methods: {
+                submit: function () {
+                    axios.post('/api/v1/login', {
+                            name: this.name,
+                            pwd: this.pwd
+                        })
+                        .then((response) => {
+                            this.msg = response.data;
+                            console.log(response.data);
+                        })
+                        .catch(function (error) {})
+                }
+            }
+        })
+    </script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

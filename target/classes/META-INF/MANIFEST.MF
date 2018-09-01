@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: Miicocozzzz
+Build-Jdk: 10.0.2
+Implementation-Title: Andromeda
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: edu.csuft.andromeda
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/Andromeda
+Created-By: Maven Integration for Eclipse
+

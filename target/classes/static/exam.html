@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
+        crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script> -->
+</head>
+
+<body>
+    <div id="app">
+        <div v-if="!isSubmit">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand" href="/" style="padding:0"><img src="img/icon.png" class="img-fluid |rounded-circle"
+                        alt="">Andromeda</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/">首页
+                                <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="rating">排行榜</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                App
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <img src="img/zfb.jpg" width="170px">
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="container mt-3">
+                <!-- 倒计时 -->
+                <div class="row">
+                    <h3 class="mx-auto">
+                        <span class="badge badge-lg badge-warning">00</span>:
+                        <span class="badge badge-lg badge-warning">00</span>:
+                        <span class="badge badge-lg badge-warning">{{vtime}}</span>
+                    </h3>
+                </div>
+                <!-- 进度条 -->
+                <div class="row ">
+                    <div class="col-sm-12 mt-2">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped" role="progressbar" v-bind:style="{width:((plan+1)/quiz.length)*100+'%'}"
+                                aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">当前进度：{{ plan+1 }}/{{
+                                quiz.length
+                                }}</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 题目 -->
+                <div class="row mt-5">
+                    <div class="col-sm-10 offset-sm-1">
+                        <div class="card">
+                            <div class="card-body">
+                                <blockquote class="blockquote">
+                                    <h4 style="display:inline"><span class="badge badge-info">{{ plan + 1 }}</span>&nbsp{{
+                                        quiz[plan].subject }}</h4>
+                                    <hr>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="radio" v-model="answer[plan]" class="form-check-input mt-2"
+                                                v-bind:name="quiz[plan].id" value="A">
+                                            <span class="badge badge-primary">A</span>
+                                            &nbsp{{ quiz[plan].item1 }}
+                                        </label>
+                                    </div>
+                                    <div class="form-check mt-3">
+                                        <label class="form-check-label">
+                                            <input type="radio" v-model="answer[plan]" class="form-check-input mt-2"
+                                                v-bind:name="quiz[plan].id" value="B">
+                                            <span class="badge badge-primary">B</span>
+                                            &nbsp{{ quiz[plan].item2 }}
+                                        </label>
+                                    </div>
+                                    <div class="form-check mt-3">
+                                        <label class="form-check-label">
+                                            <input type="radio" v-model="answer[plan]" class="form-check-input mt-2"
+                                                v-bind:name="quiz[plan].id" value="C">
+                                            <span class="badge badge-primary">C</span>
+                                            &nbsp{{ quiz[plan].item3 }}
+                                        </label>
+                                    </div>
+                                    <div class="form-check mt-3">
+                                        <label class="form-check-label">
+                                            <input type="radio" v-model="answer[plan]" class="form-check-input mt-2"
+                                                v-bind:name="quiz[plan].id" value="D">
+                                            <span class="badge badge-primary">D</span>
+                                            &nbsp{{ quiz[plan].item4 }}
+                                        </label>
+                                    </div>
+                                </blockquote>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 换题按钮 -->
+                <div class="row mt-3">
+                    <div class="col-md-5 offset-md-1 col-xs-10 offset-xs-1">
+                        <button v-if="plan==0" @click="prev()" type="button" class="btn btn-danger btn-lg btn-block"
+                            disabled>上一题</button>
+                        <button v-else @click="prev()" type="button" class="btn btn-danger btn-lg btn-block">上一题</button>
+                    </div>
+                    <div class="col-md-5 col-xs-10 offset-xs-1">
+                        <button v-if="plan==quiz.length-1" @click="next()" type="button" class="btn btn-primary btn-lg btn-block"
+                            disabled>下一题</button>
+                        <button v-else @click="next()" type="button" class="btn btn-primary btn-lg btn-block">下一题</button>
+                    </div>
+                </div>
+                <!-- 选题按钮 -->
+                <div class="row mt-3">
+                    <div class="col-sm-10 offset-sm-1">
+                        <nav aria-label="Page navigation example block">
+                            <ul class="pagination">
+                                <li v-bind:class="[(answer[0]==''||answer[0]==null)?'':'active']" @click="change(event)"
+                                    class="page-item"><a class="page-link px-3 mr-3" href="#">1</a></li>
+                                <li v-bind:class="[(answer[1]==''||answer[1]==null)?'':'active']" @click="change(event)"
+                                    class="page-item"><a class="page-link px-3 mr-3" href="#">2</a></li>
+                                <li v-bind:class="[(answer[2]==''||answer[2]==null)?'':'active']" @click="change(event)"
+                                    class="page-item"><a class="page-link px-3 mr-3" href="#">3</a></li>
+                                <li v-bind:class="[(answer[3]==''||answer[3]==null)?'':'active']" @click="change(event)"
+                                    class="page-item"><a class="page-link px-3 mr-3" href="#">4</a></li>
+                                <li v-bind:class="[(answer[4]==''||answer[4]==null)?'':'active']" @click="change(event)"
+                                    class="page-item"><a class="page-link px-3 mr-3" href="#">5</a></li>
+                                <li v-bind:class="[(answer[5]==''||answer[5]==null)?'':'active']" @click="change(event)"
+                                    class="page-item"><a class="page-link px-3 mr-3" href="#">6</a></li>
+                                <li v-bind:class="[(answer[6]==''||answer[6]==null)?'':'active']" @click="change(event)"
+                                    class="page-item"><a class="page-link px-3 mr-3" href="#">7</a></li>
+                                <li v-bind:class="[(answer[7]==''||answer[7]==null)?'':'active']" @click="change(event)"
+                                    class="page-item"><a class="page-link px-3 mr-3" href="#">8</a></li>
+                                <li v-bind:class="[(answer[8]==''||answer[8]==null)?'':'active']" @click="change(event)"
+                                    class="page-item"><a class="page-link px-3 mr-3" href="#">9</a></li>
+                                <li v-bind:class="[(answer[9]==''||answer[9]==null)?'':'active']" @click="change(event)"
+                                    class="page-item"><a class="page-link px-3 mr-3" href="#">10</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-sm-10 offset-sm-1">
+                        <button @click="submit" class="btn btn-success btn-lg btn-block">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div style="height: 600px" v-else>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand" href="" style="padding:0"><img src="img/icon.png" class="img-fluid |rounded-circle"
+                        alt="">Andromeda</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/">首页
+                                <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="rating">排行榜</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                App
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <img src="img/zfb.jpg" width="170px">
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="row mt-5">
+                <div class="col-sm-10 offset-sm-1">
+                    <div class="card" style="height:100%">
+                        <div class="card-body">
+                            <blockquote class="blockquote">
+                                <h4 class="text-center">你得了{{score}}分</h4>
+                            </blockquote>
+                            <hr>
+                            <h5 class="text-monospace">正确答案：<span v-for="item in right" class="badge badge-primary ml-2 text-monospace">{{item}}</span></h5>
+                            <h5 class="text-monospace">你的选择：<span style="cursor:pointer" v-for="(item,i) in answer" :key="i" v-on:click="correct(i)" v-bind:class="[isRight[i]?'badge-success':'badge-danger']"
+                                    class="badge ml-2 text-monospace">{{item}}</span>&nbsp 👈点击查看题目</h5>
+                            <hr v-if="mistakes!=null">
+                            <div v-if="mistakes!=null" class="card">
+                                <div class="card-body">
+                                    <blockquote class="blockquote">
+                                        <h4>{{mistakes.subject}}</h4>
+                                        <hr>
+                                        <span class="badge badge-pill badge-primary mr-3">A</span>{{mistakes.item1}}<br>
+                                        <span class="badge badge-pill badge-primary mr-3">B</span>{{mistakes.item2}}<br>
+                                        <span class="badge badge-pill badge-primary mr-3">C</span>{{mistakes.item3}}<br>
+                                        <span class="badge badge-pill badge-primary mr-3">D</span>{{mistakes.item4}}
+                                    </blockquote>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="jumbotron jumbotron-fluid bg-dark float-bottom" style="margin:0;margin-top:200px;padding-bottom: 10px">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-5 offset-md-1 pr-5" style="border-right: 1px solid gray">
+                        <table class="table table-borderless table-sm">
+                            <thead style="color: gray">
+                                <tr>
+                                    <th>Andromeda</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody style="color: white">
+                                <tr>
+                                    <td>关于我们</td>
+                                    <td>联系我们</td>
+                                    <td>加入我们</td>
+                                </tr>
+                                <tr>
+                                    <td>友情链接</td>
+                                    <td>Anromeda认证</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-4 offset-md-1">
+                        <table class="table table-borderless table-sm">
+                            <thead style="color: gray">
+                                <tr>
+                                    <th>传送门</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody style="color: white">
+                                <tr>
+                                    <td>帮助中心</td>
+                                    <td>高级弹幕</td>
+                                    <td>活动专题页</td>
+                                </tr>
+                                <tr>
+                                    <td>侵权申诉</td>
+                                    <td>活动中心</td>
+                                    <td>用户反馈论坛</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row mt-3" style="color:gray;font-weight:100;">
+                    <div class="col-md-10 offset-md-1">
+                        <b style="border-right: 1px solid gray">考试测试经营许可证：（湘）字第1248&nbsp </b><b style="border-right: 1px solid gray">&nbsp
+                            网络文化经营许可证：沪网文[2016]2296-134号&nbsp </b>
+                        <b style="border-right: 1px solid gray">&nbsp 信息网络传播考试许可证：0910417&nbsp </b><b style="border-right: 1px solid gray">&nbsp
+                            互联网ICP备案：沪ICP备13002172号-3 沪ICP证：沪B2-20100043 &nbsp </b>
+                        <b style="border-right: 1px solid gray">&nbsp 违法不良信息举报邮箱：help@andromeda.com&nbsp </b><b style="border-right: 1px solid gray">&nbsp
+                            违法不良信息举报电话：4000233233转3 &nbsp </b>
+                        <b style="border-right: 1px solid gray">&nbsp 营业执照&nbsp </b>
+                        <hr>
+                    </div>
+                </div>
+                <div class="row mt-3" style="color:gray;font-weight:100;">
+                    <b class="mx-auto">Copyright © 2018 Andromeda信息科技 版权所有</b>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                quiz: [{
+                    subject: ''
+                }],
+                plan: 0,
+                answer: [],
+                time: 30,
+                vtime: '30',
+                isSubmit: false,
+                score: 0,
+                right: [],
+                clock: function () {},
+                mistakes: null,
+                i: '',
+            },
+            methods: {
+                correct: function (i) {
+
+                    if (this.mistakes == null || i != this.i) {
+                        this.i = i;
+                        this.mistakes = this.quiz[i];
+                    } else {
+                        this.mistakes = null;
+                    }
+                },
+                change: function (e) {
+                    this.plan = e.target.innerText - 1;
+                },
+                next: function () {
+                    if (this.plan < this.quiz.length - 1) {
+                        this.plan++;
+                    }
+                },
+                prev: function () {
+                    if (this.plan > 0) {
+                        this.plan--;
+                    }
+                },
+                submit: function () {
+                    window.clearInterval(this.clock)
+                    for (let i = 0; i < this.quiz.length; i++) {
+                        if (this.answer[i] == null) {
+                            this.answer[i] = "X";
+                        }
+
+                    }
+                    axios.post('/api/v1/rating/add', this.answer)
+                        .then((response) => {
+                            this.isSubmit = true;
+                            this.right = response.data;
+                            // console.log("test:" + this.answer);
+
+                            // let i = 0;
+                            // for (const r in this.right) {
+                            //     if (r === answer[i]) {
+                            //         this.score++;
+                            //     }
+                            //     i++;
+                            // }
+                            let i = 0;
+                            let answer = this.answer;
+                            let score = 0;
+                            let isRight = [];
+                            this.right.forEach(function (v) {
+                                // console.log(v);
+                                // console.log(answer[i]);
+                                if (v == answer[i]) {
+                                    score++;
+                                    isRight[i] = true;
+                                } else {
+                                    isRight[i] = false;
+                                }
+                                i++;
+                            })
+                            this.score = score;
+                            // console.log(this.score);
+                            this.isRight = isRight;
+                            this.score = this.score / this.right.length * 100;
+                        })
+                        .catch(function (error) {})
+                }
+            },
+            mounted: function () {
+                axios.get('/api/v1/extract')
+                    .then((response) => {
+                        this.quiz = response.data;
+                        console.log(this.quiz);
+
+                    })
+                    .catch(function (error) {})
+
+                this.clock = setInterval(() => {
+
+                    if (this.time == 1) {
+                        // window.location.href = "/";
+                        // console.log(123);
+                        this.submit()
+                        window.clearInterval(this.clock)
+                    } else {
+                        this.time--;
+                        if (this.time < 10) {
+                            this.vtime = '0' + this.time
+                        } else {
+                            this.vtime = this.time
+                        }
+                    }
+
+                }, 1000);
+            },
+        })
+    </script>
+
+    <!-- <script>
+        var i = 10;
+        var id = setInterval("fun1()", 1000);
+
+        function fun1() {
+            if (i == 0) {
+                // window.location.href = "/";
+                console.log(123);
+
+                clearInterval(id);
+            } else {
+                document.getElementById("span1").innerHTML = i;
+                i--;
+            }
+        }
+    </script> -->
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
